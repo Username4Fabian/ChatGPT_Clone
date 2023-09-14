@@ -1,1 +1,27 @@
-./setup
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore build or compiled files
+/build/
+/dist/
+
+# Ignore Node.js-related files (assuming no Node.js)
+node_modules/
+
+# Ignore package-lock.json (if it exists)
+package-lock.json
+
+# Ignore log files
+*.log
+
+# Ignore user-specific IDE or editor files
+.idea/
+.vscode/
+
+# Ignore any other files or directories specific to your development environment
+# (e.g., .gitignore, .gitattributes, .editorconfig)
+
+# Ignore the setup/configuration file(s)
+config.js
+config.json
