@@ -3,7 +3,6 @@
 
 ## Creating a ChatGPT Clone using JavaScript, HTML, and CSS:
 ### Video - OpenAI_API_Tutorial_03_ChatCompletionProject_JavaScript
-<br>
 
 ### Introduction
 This tutorial provides a step-by-step guide to creating a clone of ChatGPT using foundational web technologies. While this project showcases the basics of integrating APIs in a frontend-only environment, it's vital to remember that for real-world applications, a backend is necessary to ensure security and scalability.
