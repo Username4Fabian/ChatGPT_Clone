@@ -51,11 +51,8 @@ input{
     font-size: 20px;
     padding: 12px 15px;
     border-radius: 5px;
-    box-shadow: rgba(0, 0, 0, 0.05) 0 54px 55px,
-    rgba(0, 0, 0, 0.05) 0 -12px 30px,
-    rgba(0, 0, 0, 0.05) 0 4px 6px,
-    rgba(0, 0, 0, 0.05) 0 12px 3px,
-    rgba(0, 0, 0, 0.09) 0 -3px 5px
+    caret-color: red; /* Change to desired color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjusted values */
 }
 input:focus {
     outline: none;
@@ -72,4 +69,7 @@ input:focus {
     right: 0;
     bottom: 15px;
     cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 24px;
 }
