@@ -73,3 +73,9 @@ input:focus {
     border: none;
     font-size: 24px;
 }
+#newChatButton{
+    background-color: rgba(255, 255, 255, 0.5);
+    border-color: white;
+    height: 30px;
+
+}
