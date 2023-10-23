@@ -1,9 +1,21 @@
-const API_KEY ='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'
+let API_KEY =''
 const submitButton = document.querySelector('#submit')
 const outPutElement =document.querySelector('#output')
 const inPutElement = document.querySelector('input')
 const historyElement =document.querySelector('.history')
 const buttonElement = document.querySelector('button')
+
+// Fetch API key from the backend
+async function fetchApiKey() {
+    try {
+        const response = await fetch('/api-key');
+        API_KEY = await response.text();
+    } catch (error) {
+        console.error('Error fetching API key:', error);
+    }
+}
+fetchApiKey();
+console.log(API_KEY)
 
 function changeInput(value){
     const inputElement= document.querySelector('input')
