@@ -30,13 +30,13 @@ async function getMessage(){
         console.log(data)
         outPutElement.textContent = data.choices[0].message.content
         if(data.choices[0].message.content){
-           const  pElement =document.createElement('p')
+            const  pElement =document.createElement('p')
             pElement.textContent = inPutElement.value
             pElement.addEventListener('click', () => changeInput(pElement.textContent))
             historyElement.append(pElement)
         }
     }catch (error){
-    console.error(error)
+        console.error(error)
     }
 }
 submitButton.addEventListener('click', getMessage)

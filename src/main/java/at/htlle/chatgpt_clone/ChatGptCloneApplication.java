@@ -8,7 +8,7 @@ public class ChatGptCloneApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ChatGptCloneApplication.class, args);
-        System.out.println("Server is running on port 8080");
+        System.out.println("Server is running at http://localhost:8080/");
     }
 
 }
