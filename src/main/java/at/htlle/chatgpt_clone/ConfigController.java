@@ -13,7 +13,6 @@ public class ConfigController {
 
     @GetMapping("/api-key")
     public ResponseEntity<String> getApiKey() {
-        System.out.println("API KEY: " + apiKey);
         return ResponseEntity.ok(apiKey);
     }
 }

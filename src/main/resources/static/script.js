@@ -15,7 +15,6 @@ async function fetchApiKey() {
     }
 }
 fetchApiKey();
-console.log(API_KEY)
 
 function changeInput(value){
     const inputElement= document.querySelector('input')
