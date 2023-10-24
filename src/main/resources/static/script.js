@@ -16,38 +16,31 @@ async function fetchApiKey() {
 }
 fetchApiKey();
 
-function changeInput(value) {
-    inPutElement.value = value;
-}
+const sessionId = '123456';  // Placeholder session ID. Generate or fetch dynamically for new chat sessions.
 
-async function saveChatContent(sender, content) {
-    try {
-        const response = await fetch('http://localhost:8080/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                sender: sender,
-                content: content
-            })
-        });
+function saveChatContent(userInput, botOutput) {
+    const messageData = {
+        sessionId: sessionId,
+        input: userInput,
+        output: botOutput
+    };
 
-        if (!response.ok) {
-            console.error('Failed to save chat content:', await response.text());
-            return;
-        }
-    } catch (error) {
-        console.error('Error saving chat content:', error);
-    }
+    fetch('http://localhost:8080/messages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + API_KEY
+        },
+        body: JSON.stringify(messageData)
+    })
+        .then(response => response.json())
+        .then(data => console.log('Message saved:', data))
+        .catch((error) => console.error('Error:', error));
 }
 
 async function getMessage() {
     console.log('clicked');
     const userMessage = inPutElement.value;
-
-    // Save user's message to the database
-    await saveChatContent('user', userMessage);
 
     const options = {
         method: 'POST',
@@ -67,8 +60,8 @@ async function getMessage() {
         const data = await response.json();
         const botResponse = data.choices[0].message.content;
 
-        // Save bot's response to the database
-        await saveChatContent('bot', botResponse);
+        // Save user's input and bot's response together in one database entry
+        await saveChatContent(userMessage, botResponse);
 
         // Display bot's response
         outPutElement.textContent = botResponse;

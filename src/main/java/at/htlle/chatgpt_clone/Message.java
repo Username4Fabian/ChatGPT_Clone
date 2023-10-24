@@ -1,10 +1,6 @@
 package at.htlle.chatgpt_clone;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*; //jakarta and not javax !!!!!!!
 
 @Entity
 public class Message {
@@ -13,12 +9,16 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    private String sessionId;
+    private String input;
+    private String output;
 
     public Message() {}
 
-    public Message(String content) {
-        this.content = content;
+    public Message(String sessionId, String input, String output) {
+        this.sessionId = sessionId;
+        this.input = input;
+        this.output = output;
     }
 
     public Long getId() {
@@ -29,12 +29,27 @@ public class Message {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getSessionId() {
+        return sessionId;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
-    
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
 }
