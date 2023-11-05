@@ -15,4 +15,5 @@ public class ConfigController {
     public ResponseEntity<String> getApiKey() {
         return ResponseEntity.ok(apiKey);
     }
+
 }

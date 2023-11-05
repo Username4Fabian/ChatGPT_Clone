@@ -13,7 +13,10 @@ body {
 h1{
     font-size: 33px;
     font-weight: 600;
-    padding: 200px 0;
+    padding: 10px 0 0 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
 }
 .side-bar{
     background-color: #202123;
@@ -22,12 +25,15 @@ h1{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+    text-align: center;
+
 }
 .main{
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
+    text-align: justify-all;
     justify-content: space-between;
     height: 100vh;
     width: 100%;
@@ -42,16 +48,17 @@ h1{
 .info {
     color: rgba(255, 255, 255, 0.5);
     font-size: 11px;
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 3px;
 }
 input{
     border: none;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: lightslategray;
     width: 100%;
     font-size: 20px;
     padding: 12px 15px;
     border-radius: 5px;
-    caret-color: red; /* Change to desired color */
+    caret-color: #343541; /* Change to desired color */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjusted values */
 }
 input:focus {
@@ -59,23 +66,90 @@ input:focus {
 }
 
 .input-container {
-    position: relative;
+    position: absolute;
+    bottom: 50px;
     width: 100%;
-    max-width: 650px;
+    max-width: 1500px;
+    height: 50px;
 }
 
 .input-container #submit {
     position: absolute;
-    right: 0;
-    bottom: 15px;
+    right: -20px;
+    top: 45%;
+    transform: translateY(-48%);
     cursor: pointer;
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 30px;
 }
+
 #newChatButton{
     background-color: rgba(255, 255, 255, 0.5);
     border-color: white;
     height: 30px;
+}
 
+.message {
+    padding: 5px 10px;
+    margin: 7px;
+    border-radius: 10px;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #007bff;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background-color: grey;
+}
+
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: calc(100vh - 300px);
+}
+
+#madeby{
+text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    padding: 2px;
+}
+
+/* This style assumes your button has the class 'new-chat-button' */
+#newChatButton {
+    padding: 5px 5px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff; /* Bootstrap's primary blue for example */
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    cursor: pointer;
+    width: 90%;
+    text-align: center;
+
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+#newChatButton:hover,
+#newChatButton:focus {
+    background-color: #0056b3; /* A darker shade of blue for hover/focus */
+    border-color: #004085;
+    color: #fff;
+    text-decoration: none;
+}
+
+#newChatButton:active {
+    background-color: #003865;
+    border-color: #002752;
+}
+
+/* Adjust the margin as necessary to fit within your layout */
+#newChatButton {
+    margin-top: 15px; /* Space from the top */
+    margin-bottom: 10px; /* Space from the bottom */
 }
