@@ -42,47 +42,44 @@ async function getMessage() {
     console.log('clicked');
     const userMessage = inPutElement.value;
 
-    const options = {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: userMessage }],
-            max_tokens: 100
-        })
-    };
+    // Display the user's message
+    const userMessageDiv = document.createElement('div');
+    userMessageDiv.classList.add('message', 'user-message');
+    userMessageDiv.textContent = userMessage;
+    const chatContainer = document.getElementById('chat-container');
+    chatContainer.appendChild(userMessageDiv);
 
+    // Auto-scroll to the latest user message
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    // Clear the input field
+    inPutElement.value = "";
+
+    // Send the message to your backend
     try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', options);
-        const data = await response.json();
-        const botResponse = data.choices[0].message.content;
+        const response = await fetch('/chatgpt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `userInput=${encodeURIComponent(userMessage)}`
+        });
+        const botResponse = await response.text();
 
-        // Append user's message to the history
-        if (userMessage) {
-            const pElement = document.createElement('p');
-            pElement.textContent = userMessage;
-            pElement.addEventListener('click', () => changeInput(pElement.textContent));
-            //historyElement.append(pElement);
-        }
+        // Display the bot's response
+        const chatResponseDiv = document.createElement('div');
+        chatResponseDiv.classList.add('message', 'bot-message');
+        chatResponseDiv.textContent = botResponse;
+        chatContainer.appendChild(chatResponseDiv);
 
-        // Save the chat content and wait for it to finish
-        await saveChatContent(userMessage, botResponse);
+        // Auto-scroll to the latest bot response
+        chatContainer.scrollTop = chatContainer.scrollHeight;
 
-        // Introduce a short delay to ensure the database has time to update
-        await new Promise(resolve => setTimeout(resolve, 500)); // 500ms delay
-
-        // After saving, reload the chat history
-        await loadChatHistory();
-
+        // Optionally save the chat content
+        saveChatContent(userMessage, botResponse);
     } catch (error) {
-        console.error(error);
+        console.error('Error:', error);
     }
-
-    // Clear the input after everything is done
-    inPutElement.value = '';
 }
 
 
@@ -135,3 +132,4 @@ function clearInput() {
 }
 
 buttonElement.addEventListener('click', clearInput);
+
