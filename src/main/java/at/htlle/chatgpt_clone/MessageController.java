@@ -65,13 +65,19 @@ public class MessageController {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity(OPENAI_API_URL, request, String.class);
 
-        // Extract and return the response
+        // Extract the ChatGPT response
         JSONObject jsonResponse = new JSONObject(response.getBody());
         String chatGptResponse = jsonResponse.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
 
-        return ResponseEntity.ok(chatGptResponse);
-    }
+        // Save to database
+        Message message = new Message();
+        message.setInput(userInput);
+        message.setOutput(chatGptResponse);
+        messageRepository.save(message);
 
+        // Return a simple acknowledgment (optional)
+        return ResponseEntity.ok("Response saved");
+    }
 }
 
 

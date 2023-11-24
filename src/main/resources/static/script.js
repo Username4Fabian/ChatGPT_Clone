@@ -1,20 +1,9 @@
-let API_KEY = '';
 const submitButton = document.querySelector('#submit');
 const outPutElement = document.querySelector('#output');
 const inPutElement = document.querySelector('input');
 const historyElement = document.querySelector('.history');
 const buttonElement = document.querySelector('button');
 
-// Fetch API key from the backend
-async function fetchApiKey() {
-    try {
-        const response = await fetch('/api-key');
-        API_KEY = await response.text();
-    } catch (error) {
-        console.error('Error fetching API key:', error);
-    }
-}
-fetchApiKey();
 
 const sessionId = '123456';  // Placeholder session ID. Generate or fetch dynamically for new chat sessions.
 
@@ -48,39 +37,31 @@ async function getMessage() {
     userMessageDiv.textContent = userMessage;
     const chatContainer = document.getElementById('chat-container');
     chatContainer.appendChild(userMessageDiv);
-
-    // Auto-scroll to the latest user message
     chatContainer.scrollTop = chatContainer.scrollHeight;
-
-    // Clear the input field
     inPutElement.value = "";
 
     // Send the message to your backend
     try {
-        const response = await fetch('/chatgpt', {
+        await fetch('/chatgpt', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: `userInput=${encodeURIComponent(userMessage)}`
         });
-        const botResponse = await response.text();
 
-        // Display the bot's response
-        const chatResponseDiv = document.createElement('div');
-        chatResponseDiv.classList.add('message', 'bot-message');
-        chatResponseDiv.textContent = botResponse;
-        chatContainer.appendChild(chatResponseDiv);
+        // Optionally display a loading message or placeholder here
+        // Example: displayLoadingMessage();
 
-        // Auto-scroll to the latest bot response
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        // Refresh the chat history to show the new response
+        // This could be optimized to avoid reloading the entire history
+        loadChatHistory();
 
-        // Optionally save the chat content
-        saveChatContent(userMessage, botResponse);
     } catch (error) {
         console.error('Error:', error);
     }
 }
+
 
 
 function loadChatHistory() {
