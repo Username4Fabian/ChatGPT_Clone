@@ -16,6 +16,7 @@ h1{
     padding: 10px 0 0 0;
     margin-top: 10px;
     margin-bottom: 10px;
+    text-align: center;
 
 }
 .side-bar{
@@ -29,11 +30,9 @@ h1{
     text-align: center;
 
 }
-.main{
+#main{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: justify-all;
     justify-content: space-between;
     height: 100vh;
     width: 100%;
@@ -50,6 +49,7 @@ h1{
     font-size: 11px;
     padding-top: 10px;
     padding-bottom: 3px;
+    text-align: center;
 }
 input{
     border: none;
@@ -91,7 +91,7 @@ input:focus {
 }
 
 .message {
-    padding: 5px 10px;
+    padding: 5px 13px;
     margin: 7px;
     border-radius: 10px;
 }

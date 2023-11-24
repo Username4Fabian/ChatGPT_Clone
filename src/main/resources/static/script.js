@@ -57,6 +57,7 @@ async function getMessage() {
         // This could be optimized to avoid reloading the entire history
         loadChatHistory();
 
+
     } catch (error) {
         console.error('Error:', error);
     }
@@ -65,6 +66,7 @@ async function getMessage() {
 
 
 function loadChatHistory() {
+    clearChatContainer();
     fetch('/messages') // Ensure this points to the correct backend endpoint
         .then(response => response.json())
         .then(messages => {
@@ -110,6 +112,11 @@ inPutElement.addEventListener('keypress', function(event) {
 
 function clearInput() {
     inPutElement.value = "";
+}
+
+function clearChatContainer() {
+    const chatContainer = document.getElementById('chat-container');
+    chatContainer.innerText = "";
 }
 
 buttonElement.addEventListener('click', clearInput);
