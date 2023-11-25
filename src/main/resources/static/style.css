@@ -71,6 +71,7 @@ input:focus {
     width: calc(75vw - 35px);
     max-width: 1500px;
     height: 50px;
+
 }
 
 .input-container #submit {
@@ -106,12 +107,13 @@ input:focus {
     background-color: grey;
 }
 
-#over-chat-container {
+.over-chat-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-left: 5px;
     margin-right: 5px;
+    max-margin-bottom: calc(108vh - 300px);
 }
 
 #chat-container {
@@ -119,11 +121,11 @@ input:focus {
     flex-direction: column;
     overflow-y: auto;
     max-height: calc(108vh - 300px);
-    
+
 }
 
 #madeby{
-text-align: center;
+    text-align: center;
     color: rgba(255, 255, 255, 0.5);
     font-size: 13px;
     padding: 2px;
@@ -183,3 +185,13 @@ text-align: center;
 .loading-hidden {
     display: none;
 }
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.body::-webkit-scrollbar {
+    display: none;
+}
+/* Hide scrollbar for IE, Edge, and Firefox */
+.body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
