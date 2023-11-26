@@ -7,21 +7,22 @@ const buttonElement = document.querySelector('button');
 
 const sessionId = '123456';  // Placeholder session ID. Generate or fetch dynamically for new chat sessions.
 
+// Used to save both the user's input and the bot's output to your backend
+// now managed by the backend itself
 function saveChatContent(userInput, botOutput) {
     const messageData = {
-        sessionId: sessionId,
-        input: userInput,
-        output: botOutput
+        sessionId: sessionId, input: userInput, output: botOutput
     };
 
+    // Send the message data to your backend
     fetch('http://localhost:8080/messages', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + API_KEY
-        },
+        method: 'POST', headers: {
+            'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY
+        }, // Convert the JavaScript object to a JSON string
         body: JSON.stringify(messageData)
     })
+        // Parses the server response as JSON, logs the data if the response is okay,
+        // and throws an error if the response is not okay.
         .then(response => response.json())
         .then(data => console.log('Message saved:', data))
         .catch((error) => console.error('Error:', error));
@@ -31,8 +32,9 @@ async function getMessage() {
     console.log('clicked');
     const userMessage = inPutElement.value;
 
-    // Display the user's message
+    //Creates new HTML element for the user's message
     const userMessageDiv = document.createElement('div');
+    //Adds css classes
     userMessageDiv.classList.add('message', 'user-message');
     userMessageDiv.textContent = userMessage;
     const chatContainer = document.getElementById('chat-container');
@@ -43,15 +45,10 @@ async function getMessage() {
     // Send the message to your backend
     try {
         await fetch('/chatgpt', {
-            method: 'POST',
-            headers: {
+            method: 'POST', headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `userInput=${encodeURIComponent(userMessage)}`
+            }, body: `userInput=${encodeURIComponent(userMessage)}`
         });
-
-        // Optionally display a loading message or placeholder here
-        // Example: displayLoadingMessage();
 
         // Refresh the chat history to show the new response
         // This could be optimized to avoid reloading the entire history
@@ -62,7 +59,6 @@ async function getMessage() {
         console.error('Error:', error);
     }
 }
-
 
 
 function loadChatHistory() {
@@ -101,19 +97,20 @@ loadChatHistory(); // Call this function to load the chat history when the page 
 
 submitButton.addEventListener('click', getMessage);
 
-// Assuming 'inPutElement' is your input field and 'getMessage' is the function to send the message
-inPutElement.addEventListener('keypress', function(event) {
+// 'inPutElement' is your input field and 'getMessage' is the function to send the message
+inPutElement.addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault(); // Prevent the default action to avoid submitting a form if it's part of one
         getMessage(); // Call the function to handle sending the message
     }
 });
 
-
+// clears users input field
 function clearInput() {
     inPutElement.value = "";
 }
 
+// clears whole chat container
 function clearChatContainer() {
     const chatContainer = document.getElementById('chat-container');
     chatContainer.innerText = "";
