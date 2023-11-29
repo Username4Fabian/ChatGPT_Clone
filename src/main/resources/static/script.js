@@ -7,27 +7,6 @@ const buttonElement = document.querySelector('button');
 
 const sessionId = '123456';  // Placeholder session ID. Generate or fetch dynamically for new chat sessions.
 
-// Used to save both the user's input and the bot's output to your backend
-// now managed by the backend itself
-function saveChatContent(userInput, botOutput) {
-    const messageData = {
-        sessionId: sessionId, input: userInput, output: botOutput
-    };
-
-    // Send the message data to your backend
-    fetch('http://localhost:8080/messages', {
-        method: 'POST', headers: {
-            'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY
-        }, // Convert the JavaScript object to a JSON string
-        body: JSON.stringify(messageData)
-    })
-        // Parses the server response as JSON, logs the data if the response is okay,
-        // and throws an error if the response is not okay.
-        .then(response => response.json())
-        .then(data => console.log('Message saved:', data))
-        .catch((error) => console.error('Error:', error));
-}
-
 async function getMessage() {
     console.log('clicked');
     const userMessage = inPutElement.value;
@@ -54,12 +33,10 @@ async function getMessage() {
         // This could be optimized to avoid reloading the entire history
         loadChatHistory();
 
-
     } catch (error) {
         console.error('Error:', error);
     }
 }
-
 
 function loadChatHistory() {
     clearChatContainer();
@@ -91,9 +68,7 @@ function loadChatHistory() {
         .catch(error => console.error('Error loading chat history:', error));
 }
 
-
 loadChatHistory(); // Call this function to load the chat history when the page loads
-
 
 submitButton.addEventListener('click', getMessage);
 
