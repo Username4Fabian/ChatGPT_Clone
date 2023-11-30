@@ -91,5 +91,19 @@ function clearChatContainer() {
     chatContainer.innerText = "";
 }
 
+document.querySelector('#newChatButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch('/clearDatabase', { method: 'POST' });
+        if (response.ok) {
+            console.log('Database cleared successfully');
+            clearChatContainer();
+        } else {
+            console.error('Failed to clear the database');
+        }
+    } catch (error) {
+        console.error('Error clearing the database:', error);
+    }
+});
+
 buttonElement.addEventListener('click', clearInput);
 

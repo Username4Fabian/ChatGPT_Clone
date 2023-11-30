@@ -5,7 +5,7 @@ import at.htlle.chatgpt_clone.MessageRepository;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpEntity;
 import org.json.JSONObject;
 
 import java.util.List;
@@ -77,6 +74,19 @@ public class MessageController {
 
         // Return a simple acknowledgment (optional)
         return ResponseEntity.ok("Response saved");
+    }
+
+    @PostMapping("/clearDatabase")
+    public ResponseEntity<?> clearDatabase() {
+        try {
+            // Implement the logic to clear the database
+            // For example, if using a JPA repository:
+            messageRepository.deleteAll();
+
+            return ResponseEntity.ok().body("Database cleared successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error clearing the database");
+        }
     }
 }
 
