@@ -91,6 +91,7 @@ function clearChatContainer() {
     chatContainer.innerText = "";
 }
 
+// Adds event listener to clear chat history button and clears chat container
 document.querySelector('#newChatButton').addEventListener('click', async () => {
     try {
         const response = await fetch('/clearDatabase', { method: 'POST' });

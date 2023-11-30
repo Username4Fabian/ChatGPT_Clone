@@ -76,6 +76,7 @@ public class MessageController {
         return ResponseEntity.ok("Response saved");
     }
 
+    // Clears the database (temporary method)
     @PostMapping("/clearDatabase")
     public ResponseEntity<?> clearDatabase() {
         try {
