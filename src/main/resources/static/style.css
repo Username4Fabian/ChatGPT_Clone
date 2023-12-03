@@ -179,7 +179,8 @@ input:focus {
     border-radius: 5px; /* Round the corners */
     padding: 10px; /* Add some padding */
     overflow-y: auto; /* Add a scrollbar if the content overflows */
-    max-height: 70vh; /* Limit the height */
+    margin-top: -5px;
+
 }
 
 /* Style for each chat history item */
@@ -187,7 +188,7 @@ input:focus {
     padding: 10px; /* Add some padding */
     margin: 5px 0; /* Add some margin at the top and bottom */
     border-radius: 5px; /* Round the corners */
-    background-color: #007bff; /* Change the background color */
+    background-color: #343541; /* Change the background color */
     cursor: pointer; /* Change the cursor when hovering over the item */
     transition: background-color 0.3s ease; /* Add a transition for the background color */
 }
@@ -201,5 +202,13 @@ input:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 90%;
+    margin-top: -12px;
+}
+
+#history-list {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: auto;
+    text-align: center;
 }

@@ -1,6 +1,5 @@
 /*
 TODO:
-- Auto delete empty chat histories
 - Add a delete button for each chat history
 - Add a rename button for each chat history
 - Add webpage icon
