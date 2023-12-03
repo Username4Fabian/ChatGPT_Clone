@@ -1,7 +1,5 @@
 package at.htlle.chatgpt_clone;
 
-import at.htlle.chatgpt_clone.Message;
-import at.htlle.chatgpt_clone.MessageRepository;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,30 +8,33 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static java.lang.Integer.parseInt;
 
 @RestController
 public class MessageController {
 
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private ChatHistoryRepository chatHistoryRepository;
 
     @PostMapping("/messages")
     public ResponseEntity<Message> saveMessage(@RequestBody Message message) {
         Message savedMessage = messageRepository.save(message);
         return ResponseEntity.ok(savedMessage);
     }
-    
+
     @GetMapping("/messages")
-    public ResponseEntity<List<Message>> getChatHistory() {
-        // This should fetch the chat history from the database
-        List<Message> chatHistory = messageRepository.findAll();
-        return ResponseEntity.ok(chatHistory);
+    public ResponseEntity<List<Message>> getMessages(@RequestParam Integer chatHistoryId) {
+        List<Message> messages = messageRepository.findByChatHistoryId(chatHistoryId);
+        return ResponseEntity.ok(messages);
     }
 
 
@@ -43,7 +44,7 @@ public class MessageController {
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
     @PostMapping("/chatgpt")
-    public ResponseEntity<String> getChatGptResponse(@RequestParam String userInput) {
+    public ResponseEntity<String> getChatGptResponse(@RequestParam String userInput, @RequestParam Integer chatHistoryId) {
         // Set up headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -66,8 +67,13 @@ public class MessageController {
         JSONObject jsonResponse = new JSONObject(response.getBody());
         String chatGptResponse = jsonResponse.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content");
 
+        // Fetch the Chathistory object with the given chatHistoryId
+        Chathistory chatHistory = chatHistoryRepository.findById(chatHistoryId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chatHistoryId: " + chatHistoryId));
+
         // Save to database
         Message message = new Message();
+        message.setChatHistory(chatHistory); // Set the chatHistory
         message.setInput(userInput);
         message.setOutput(chatGptResponse);
         messageRepository.save(message);
@@ -75,7 +81,6 @@ public class MessageController {
         // Return a simple acknowledgment (optional)
         return ResponseEntity.ok("Response saved");
     }
-
     // Clears the database (temporary method)
     @PostMapping("/clearDatabase")
     public ResponseEntity<?> clearDatabase() {
@@ -89,6 +94,45 @@ public class MessageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error clearing the database");
         }
     }
+
+    @PostMapping("/chatHistories")
+    public ResponseEntity<Chathistory> saveChatHistory(@RequestBody Chathistory chatHistory) {
+        Chathistory savedChatHistory = chatHistoryRepository.save(chatHistory);
+        return ResponseEntity.ok(savedChatHistory);
+    }
+
+    @GetMapping("/chatHistories")
+    public ResponseEntity<List<Chathistory>> getAllChatHistories() {
+        List<Chathistory> chatHistories = chatHistoryRepository.findAll();
+        return ResponseEntity.ok(chatHistories);
+    }
+
+    @GetMapping("/maxChatHistoryId")
+    public ResponseEntity<Long> getMaxChatHistoryId() {
+        Long maxChatHistoryId = chatHistoryRepository.findMaxChatHistoryId();
+        //System.out.println(maxChatHistoryId);
+        return ResponseEntity.ok(maxChatHistoryId);
+    }
+
+    @PostMapping("/newChatHistory")
+    public ResponseEntity<Chathistory> createNewChatHistory(@RequestParam String firstMessage) {
+        // Fetch the maximum chatHistoryId from the chatHistoryRepository
+        Long maxChatHistoryId = chatHistoryRepository.findMaxChatHistoryId();
+
+        // Increment the maximum chatHistoryId by 1
+        int newChatHistoryId = maxChatHistoryId != null ? maxChatHistoryId.intValue() + 1 : 1;
+        //System.out.println(newChatHistoryId);
+
+        // Create a new Chathistory object with the new chatHistoryId
+        Chathistory newChatHistory = new Chathistory();
+        newChatHistory.setChatHistoryId(newChatHistoryId);
+        newChatHistory.setHeadline(firstMessage);
+        newChatHistory.setTimeStamp(LocalDateTime.now());
+
+        // Save the new Chathistory object to the chatHistoryRepository
+        chatHistoryRepository.save(newChatHistory);
+
+        // Return the new Chathistory object in the response
+        return ResponseEntity.ok(newChatHistory);
+    }
 }
-
-

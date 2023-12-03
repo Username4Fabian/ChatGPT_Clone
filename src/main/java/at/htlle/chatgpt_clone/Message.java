@@ -9,14 +9,17 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sessionId;
+    @ManyToOne
+    @JoinColumn(name = "chat_history_id")
+    private Chathistory chatHistory;
+
     private String input;
     private String output;
 
     public Message() {}
 
-    public Message(String sessionId, String input, String output) {
-        this.sessionId = sessionId;
+    public Message(Chathistory chatHistory, String input, String output) {
+        this.chatHistory = chatHistory;
         this.input = input;
         this.output = output;
     }
@@ -29,12 +32,12 @@ public class Message {
         this.id = id;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public Chathistory getChatHistory() {
+        return chatHistory;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setChatHistory(Chathistory chatHistory) {
+        this.chatHistory = chatHistory;
     }
 
     public String getInput() {
@@ -52,4 +55,6 @@ public class Message {
     public void setOutput(String output) {
         this.output = output;
     }
+
+
 }

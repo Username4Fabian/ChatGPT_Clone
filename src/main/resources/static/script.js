@@ -1,108 +1,168 @@
 const submitButton = document.querySelector('#submit');
-const outPutElement = document.querySelector('#output');
 const inPutElement = document.querySelector('input');
-const historyElement = document.querySelector('.history');
 const buttonElement = document.querySelector('button');
 
+let isFirstMessage = true;
+let chatHistoryId = null;
 
-const sessionId = '123456';  // Placeholder session ID. Generate or fetch dynamically for new chat sessions.
+async function startNewChat(firstMessage) {
+    clearChatContainer();
+    const response = await fetch('/newChatHistory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `firstMessage=${encodeURIComponent(firstMessage)}`
+    });
+
+    const newChatHistory = await response.json();
+    displayHistory();
+    return newChatHistory.chatHistoryId;
+}
 
 async function getMessage() {
-    console.log('clicked');
     const userMessage = inPutElement.value;
+    const chatContainer = document.getElementById('chat-container');
 
-    //Creates new HTML element for the user's message
     const userMessageDiv = document.createElement('div');
-    //Adds css classes
     userMessageDiv.classList.add('message', 'user-message');
     userMessageDiv.textContent = userMessage;
-    const chatContainer = document.getElementById('chat-container');
     chatContainer.appendChild(userMessageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
     inPutElement.value = "";
 
-    // Send the message to your backend
+    if (isFirstMessage) {
+        chatHistoryId = await startNewChat(userMessage);
+        isFirstMessage = false;
+    }
+
     try {
         await fetch('/chatgpt', {
-            method: 'POST', headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }, body: `userInput=${encodeURIComponent(userMessage)}`
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `userInput=${encodeURIComponent(userMessage)}&chatHistoryId=${chatHistoryId}`
         });
 
-        // Refresh the chat history to show the new response
-        // This could be optimized to avoid reloading the entire history
-        loadChatHistory();
-
+        loadChatHistory(chatHistoryId);
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
-function loadChatHistory() {
+function loadChatHistory(chatHistoryId) {
     clearChatContainer();
-    fetch('/messages') // Ensure this points to the correct backend endpoint
+    fetch(`/messages?chatHistoryId=${chatHistoryId}`)
         .then(response => response.json())
         .then(messages => {
             const chatContainer = document.getElementById('chat-container');
-            messages.forEach(message => {
-                // Create a div for the user's message
-                if (message.input) {
-                    const userInputDiv = document.createElement('div');
-                    userInputDiv.classList.add('message', 'user-message');
-                    userInputDiv.textContent = message.input;
-                    chatContainer.appendChild(userInputDiv);
-                }
+            if (Array.isArray(messages)) {
+                messages.forEach(message => {
+                    if (message.input) {
+                        const userInputDiv = document.createElement('div');
+                        userInputDiv.classList.add('message', 'user-message');
+                        userInputDiv.textContent = message.input;
+                        chatContainer.appendChild(userInputDiv);
+                    }
 
-                // Create a div for the bot's response
-                if (message.output) {
-                    const botResponseDiv = document.createElement('div');
-                    botResponseDiv.classList.add('message', 'bot-message');
-                    botResponseDiv.textContent = message.output;
-                    chatContainer.appendChild(botResponseDiv);
-                }
-            });
+                    if (message.output) {
+                        const botResponseDiv = document.createElement('div');
+                        botResponseDiv.classList.add('message', 'bot-message');
+                        botResponseDiv.textContent = message.output;
+                        chatContainer.appendChild(botResponseDiv);
+                    }
+                });
+            }
 
-            // Scroll to the bottom to show the latest messages
             chatContainer.scrollTop = chatContainer.scrollHeight;
         })
         .catch(error => console.error('Error loading chat history:', error));
 }
 
-loadChatHistory(); // Call this function to load the chat history when the page loads
+
 
 submitButton.addEventListener('click', getMessage);
 
-// 'inPutElement' is your input field and 'getMessage' is the function to send the message
 inPutElement.addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
-        event.preventDefault(); // Prevent the default action to avoid submitting a form if it's part of one
-        getMessage(); // Call the function to handle sending the message
+        event.preventDefault();
+        getMessage();
     }
 });
 
-// clears users input field
 function clearInput() {
     inPutElement.value = "";
 }
 
-// clears whole chat container
 function clearChatContainer() {
     const chatContainer = document.getElementById('chat-container');
     chatContainer.innerText = "";
 }
 
-// Adds event listener to clear chat history button and clears chat container
+displayHistory();
+
+function displayHistory() {
+    fetch('/chatHistories')
+        .then(response => response.json())
+        .then(chatHistories => {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+
+            chatHistories.forEach(chatHistory => {
+                const chatHistoryDiv = document.createElement('div');
+                chatHistoryDiv.textContent = chatHistory.headline;
+
+                chatHistoryDiv.addEventListener('click', () => {
+                    chatHistoryId = chatHistory.chatHistoryId; // Update chatHistoryId
+                    loadChatHistory(chatHistoryId);
+                });
+
+                historyList.appendChild(chatHistoryDiv);
+            });
+        })
+        .catch(error => console.error('Error loading chat histories:', error));
+}
+
+async function getCurrentChatHistoryId() {
+    const response = await fetch('/maxChatHistoryId');
+    const maxChatHistoryId = await response.json();
+
+    if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+        return maxChatHistoryId + 1;
+    }
+
+    return maxChatHistoryId;
+}
+
+async function createNewChatHistory() {
+    const chatHistory = {
+        chatHistoryId: await getCurrentChatHistoryId(),
+        headline: 'New Chat',
+        timeStamp: new Date().toISOString()
+    };
+
+    const response = await fetch('/chatHistories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(chatHistory)
+    });
+
+    const newChatHistory = await response.json();
+    return newChatHistory;
+}
+
 document.querySelector('#newChatButton').addEventListener('click', async () => {
-    try {
-        const response = await fetch('/clearDatabase', { method: 'POST' });
-        if (response.ok) {
-            console.log('Database cleared successfully');
-            clearChatContainer();
-        } else {
-            console.error('Failed to clear the database');
-        }
-    } catch (error) {
-        console.error('Error clearing the database:', error);
+    const firstMessage = inPutElement.value;
+    chatHistoryId = await startNewChat(firstMessage);
+    isFirstMessage = true;
+    clearChatContainer();
+    loadChatHistory(chatHistoryId);
+});
+
+window.addEventListener('load', async () => {
+    if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+        const firstMessage = inPutElement.value;
+        chatHistoryId = await startNewChat(firstMessage);
+        isFirstMessage = true;
+        clearChatContainer();
+        loadChatHistory(chatHistoryId);
     }
 });
 
