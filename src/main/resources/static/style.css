@@ -166,3 +166,40 @@ input:focus {
     margin-bottom: 10px; /* Space from the bottom */
 }
 
+#deleteAllButton {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+/* Style for the history container */
+.history {
+    width: 90%; /* Adjust as needed */
+    margin: 20px auto; /* Center the container and add some margin at the top and bottom */
+    border-radius: 5px; /* Round the corners */
+    padding: 10px; /* Add some padding */
+    overflow-y: auto; /* Add a scrollbar if the content overflows */
+    max-height: 70vh; /* Limit the height */
+}
+
+/* Style for each chat history item */
+#history-list div {
+    padding: 10px; /* Add some padding */
+    margin: 5px 0; /* Add some margin at the top and bottom */
+    border-radius: 5px; /* Round the corners */
+    background-color: #007bff; /* Change the background color */
+    cursor: pointer; /* Change the cursor when hovering over the item */
+    transition: background-color 0.3s ease; /* Add a transition for the background color */
+}
+
+/* Change the background color when hovering over a chat history item */
+#history-list div:hover {
+    background-color: #0056b3; /* Change the background color */
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}

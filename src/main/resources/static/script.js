@@ -1,3 +1,11 @@
+/*
+TODO:
+- Auto delete empty chat histories
+- Add a delete button for each chat history
+- Add a rename button for each chat history
+- Add webpage icon
+ */
+
 const submitButton = document.querySelector('#submit');
 const inPutElement = document.querySelector('input');
 const buttonElement = document.querySelector('button');
@@ -150,19 +158,19 @@ async function createNewChatHistory() {
 
 document.querySelector('#newChatButton').addEventListener('click', async () => {
     const firstMessage = inPutElement.value;
-    chatHistoryId = await startNewChat(firstMessage);
-    isFirstMessage = true;
-    clearChatContainer();
-    loadChatHistory(chatHistoryId);
-});
-
-window.addEventListener('load', async () => {
-    if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-        const firstMessage = inPutElement.value;
+    if (firstMessage.trim() !== '') { // Check if firstMessage is not empty
         chatHistoryId = await startNewChat(firstMessage);
         isFirstMessage = true;
         clearChatContainer();
         loadChatHistory(chatHistoryId);
+    }
+});
+
+document.querySelector('#newChatButton').addEventListener('click', () => {
+    const chatContainer = document.getElementById('chat-container');
+    if (chatContainer.children.length > 0) { // Check if chatContainer is not empty
+        clearChatContainer();
+        isFirstMessage = true;
     }
 });
 
