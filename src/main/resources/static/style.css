@@ -175,12 +175,10 @@ input:focus {
 /* Style for the history container */
 .history {
     width: 90%; /* Adjust as needed */
-    margin: 20px auto; /* Center the container and add some margin at the top and bottom */
     border-radius: 5px; /* Round the corners */
     padding: 10px; /* Add some padding */
     overflow-y: auto; /* Add a scrollbar if the content overflows */
-    margin-top: -5px;
-
+    margin: -5px auto 20px;
 }
 
 /* Style for each chat history item */
@@ -211,4 +209,5 @@ input:focus {
     flex-direction: column-reverse;
     overflow-y: auto;
     text-align: center;
+    align-self: flex-start;
 }
