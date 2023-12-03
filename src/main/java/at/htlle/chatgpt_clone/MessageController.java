@@ -4,15 +4,12 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -116,17 +113,25 @@ public class MessageController {
 
     @PostMapping("/newChatHistory")
     public ResponseEntity<Chathistory> createNewChatHistory(@RequestParam String firstMessage) {
+        // Split the first message into words
+        String[] words = firstMessage.split("\\s+");
+
+        // If the first message has more than four words, take the first four words and append "..."
+        String headline = String.join(" ", Arrays.copyOfRange(words, 0, Math.min(words.length, 4)));
+        if (words.length > 4) {
+            headline += headline.endsWith(".") ? ".." : "...";
+        }
+
         // Fetch the maximum chatHistoryId from the chatHistoryRepository
         Long maxChatHistoryId = chatHistoryRepository.findMaxChatHistoryId();
 
         // Increment the maximum chatHistoryId by 1
-        int newChatHistoryId = maxChatHistoryId != null ? maxChatHistoryId.intValue() + 1 : 1;
-        //System.out.println(newChatHistoryId);
+        Integer newChatHistoryId = maxChatHistoryId != null ? maxChatHistoryId.intValue() + 1 : 1;
 
         // Create a new Chathistory object with the new chatHistoryId
         Chathistory newChatHistory = new Chathistory();
         newChatHistory.setChatHistoryId(newChatHistoryId);
-        newChatHistory.setHeadline(firstMessage);
+        newChatHistory.setHeadline(headline); // Use the headline as the headline for the new chat history
         newChatHistory.setTimeStamp(LocalDateTime.now());
 
         // Save the new Chathistory object to the chatHistoryRepository
@@ -135,4 +140,13 @@ public class MessageController {
         // Return the new Chathistory object in the response
         return ResponseEntity.ok(newChatHistory);
     }
+
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<Void> deleteAll() {
+        messageRepository.deleteAll();
+        chatHistoryRepository.deleteAll();
+        return ResponseEntity.noContent().build();
+    }
+
+
 }

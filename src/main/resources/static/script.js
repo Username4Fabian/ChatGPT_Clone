@@ -166,5 +166,22 @@ window.addEventListener('load', async () => {
     }
 });
 
+document.querySelector('#deleteAllButton').addEventListener('click', () => {
+    fetch('/deleteAll', { method: 'DELETE' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            isFirstMessage = true;
+            clearChatContainer();
+            loadChatHistory(chatHistoryId);
+            displayHistory();
+            // Optionally, you can refresh the page or update the UI to reflect the deletion
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+
+
 buttonElement.addEventListener('click', clearInput);
 
