@@ -5,17 +5,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
+@Configuration  // Marks this class as a configuration class
 public class WebConfig {
 
-    @Bean
+    @Bean  // Defines a bean to be managed by Spring
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
+                // Configures CORS for all paths and allows specific HTTP methods
+                // from the specified origin
                 registry.addMapping("/**")
                         .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedOrigins("http://localhost:8080");  // Replace with your frontend's origin
+                        .allowedOrigins("http://localhost:8080");
             }
         };
     }

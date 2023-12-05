@@ -1,29 +1,32 @@
 package at.htlle.chatgpt_clone;
 
-import jakarta.persistence.*; //jakarta and not javax !!!!!!!
+import jakarta.persistence.*;
 
-@Entity
+@Entity  // This class is a JPA entity
 public class Message {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id  // Primary key for this entity
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // The primary key value is auto-generated
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "chat_history_id")
+    @ManyToOne  // Many-to-one relationship with the Chathistory entity
+    @JoinColumn(name = "chat_history_id")  // Foreign key column in the Message table
     private Chathistory chatHistory;
 
     private String input;
     private String output;
 
+    // Default constructor and constructor with parameters
     public Message() {}
 
+    // Constructor with parameters
     public Message(Chathistory chatHistory, String input, String output) {
         this.chatHistory = chatHistory;
         this.input = input;
         this.output = output;
     }
 
+    // Getters and setters for the fields
     public Long getId() {
         return id;
     }

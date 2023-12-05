@@ -19,7 +19,6 @@ h1 {
     margin-top: 10px;
     margin-bottom: 3px;
     text-align: center;
-
 }
 
 .side-bar {
@@ -31,13 +30,11 @@ h1 {
     justify-content: space-between;
     align-items: center;
     text-align: center;
-
 }
 
 #main {
     display: flex;
     flex-direction: column;
-    <!-- justify-content: space-between; -->
     height: 100vh;
     width: 100%;
 }
@@ -67,8 +64,8 @@ input {
     font-size: 20px;
     padding: 12px 15px;
     border-radius: 5px;
-    caret-color: #343541; /* Change to desired color */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjusted values */
+    caret-color: #343541;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 input:focus {
@@ -132,18 +129,16 @@ input:focus {
     padding: 2px;
 }
 
-/* This style assumes your button has the class 'new-chat-button' */
 #newChatButton {
     padding: 5px 5px;
     font-size: 16px;
     color: white;
-    background-color: #007bff; /* Bootstrap's primary blue for example */
+    background-color: #007bff;
     border: 1px solid transparent;
     border-radius: .25rem;
     cursor: pointer;
     width: 90%;
     text-align: center;
-
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
@@ -160,10 +155,9 @@ input:focus {
     border-color: #002752;
 }
 
-/* Adjust the margin as necessary to fit within your layout */
 #newChatButton {
-    margin-top: 15px; /* Space from the top */
-    margin-bottom: 10px; /* Space from the bottom */
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 #deleteAllButton {
@@ -174,20 +168,20 @@ input:focus {
 
 /* Style for the history container */
 .history {
-    width: 90%; /* Adjust as needed */
-    border-radius: 5px; /* Round the corners */
-    padding: 10px; /* Add some padding */
+    width: 90%;
+    border-radius: 5px;
+    padding: 10px;
     overflow-y: auto; /* Add a scrollbar if the content overflows */
     margin: -5px auto 20px;
 }
 
 /* Style for each chat history item */
 #history-list div {
-    padding: 10px; /* Add some padding */
-    margin: 5px 0; /* Add some margin at the top and bottom */
-    border-radius: 5px; /* Round the corners */
-    background-color: #343541; /* Change the background color */
-    cursor: pointer; /* Change the cursor when hovering over the item */
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    background-color: #343541;
+    cursor: pointer;
     transition: background-color 0.3s ease; /* Add a transition for the background color */
 }
 

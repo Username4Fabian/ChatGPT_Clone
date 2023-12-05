@@ -2,16 +2,18 @@
 TODO:
 - Add a delete button for each chat history
 - Add a rename button for each chat history
-- Add webpage icon
+- Add timestamps to history
  */
 
 const submitButton = document.querySelector('#submit');
 const inPutElement = document.querySelector('input');
 const buttonElement = document.querySelector('button');
-
 let isFirstMessage = true;
 let chatHistoryId = null;
 
+displayHistory();
+
+// Function to start a new chat
 async function startNewChat(firstMessage) {
     clearChatContainer();
     const response = await fetch('/newChatHistory', {
@@ -25,6 +27,7 @@ async function startNewChat(firstMessage) {
     return newChatHistory.chatHistoryId;
 }
 
+// Function to get a message from the user, send it to ChatGPT, and display the response
 async function getMessage() {
     const userMessage = inPutElement.value;
     const chatContainer = document.getElementById('chat-container');
@@ -54,6 +57,7 @@ async function getMessage() {
     }
 }
 
+// Function to load chat history from the database and display it
 function loadChatHistory(chatHistoryId) {
     clearChatContainer();
     fetch(`/messages?chatHistoryId=${chatHistoryId}`)
@@ -84,9 +88,8 @@ function loadChatHistory(chatHistoryId) {
 }
 
 
-
+// Event listeners for the submit button and the input field
 submitButton.addEventListener('click', getMessage);
-
 inPutElement.addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();
@@ -94,17 +97,18 @@ inPutElement.addEventListener('keypress', function (event) {
     }
 });
 
+// Function to clear the input field
 function clearInput() {
     inPutElement.value = "";
 }
 
+// Function to clear the chat container
 function clearChatContainer() {
     const chatContainer = document.getElementById('chat-container');
     chatContainer.innerText = "";
 }
 
-displayHistory();
-
+// Function to display chat histories
 function displayHistory() {
     fetch('/chatHistories')
         .then(response => response.json())
@@ -127,52 +131,25 @@ function displayHistory() {
         .catch(error => console.error('Error loading chat histories:', error));
 }
 
-async function getCurrentChatHistoryId() {
-    const response = await fetch('/maxChatHistoryId');
-    const maxChatHistoryId = await response.json();
-
-    if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
-        return maxChatHistoryId + 1;
-    }
-
-    return maxChatHistoryId;
-}
-
-async function createNewChatHistory() {
-    const chatHistory = {
-        chatHistoryId: await getCurrentChatHistoryId(),
-        headline: 'New Chat',
-        timeStamp: new Date().toISOString()
-    };
-
-    const response = await fetch('/chatHistories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(chatHistory)
-    });
-
-    const newChatHistory = await response.json();
-    return newChatHistory;
-}
-
+// Event listeners for the new chat button
 document.querySelector('#newChatButton').addEventListener('click', async () => {
     const firstMessage = inPutElement.value;
+    const chatContainer = document.getElementById('chat-container');
+
     if (firstMessage.trim() !== '') { // Check if firstMessage is not empty
         chatHistoryId = await startNewChat(firstMessage);
         isFirstMessage = true;
         clearChatContainer();
         loadChatHistory(chatHistoryId);
     }
-});
 
-document.querySelector('#newChatButton').addEventListener('click', () => {
-    const chatContainer = document.getElementById('chat-container');
     if (chatContainer.children.length > 0) { // Check if chatContainer is not empty
         clearChatContainer();
         isFirstMessage = true;
     }
 });
 
+// Event listeners for the delete button
 document.querySelector('#deleteAllButton').addEventListener('click', () => {
     fetch('/deleteAll', { method: 'DELETE' })
         .then(response => {
@@ -188,7 +165,6 @@ document.querySelector('#deleteAllButton').addEventListener('click', () => {
         .catch(error => console.error('Error:', error));
 });
 
-
-
+// Event listener for the clear button
 buttonElement.addEventListener('click', clearInput);
 

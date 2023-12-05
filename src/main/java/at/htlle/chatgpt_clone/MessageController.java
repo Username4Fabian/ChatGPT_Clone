@@ -22,24 +22,27 @@ public class MessageController {
     @Autowired
     private ChatHistoryRepository chatHistoryRepository;
 
+    private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
+
+    // Endpoint to save a message
     @PostMapping("/messages")
     public ResponseEntity<Message> saveMessage(@RequestBody Message message) {
         Message savedMessage = messageRepository.save(message);
         return ResponseEntity.ok(savedMessage);
     }
 
+    // Endpoint to get messages by chatHistoryId
     @GetMapping("/messages")
     public ResponseEntity<List<Message>> getMessages(@RequestParam Integer chatHistoryId) {
         List<Message> messages = messageRepository.findByChatHistoryId(chatHistoryId);
         return ResponseEntity.ok(messages);
     }
 
-
+    // OpenAI API key
     @Value("${openai.api.key}")
     private String openaiApiKey;
 
-    private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-
+    // Endpoint to get a response from ChatGPT and save it
     @PostMapping("/chatgpt")
     public ResponseEntity<String> getChatGptResponse(@RequestParam String userInput, @RequestParam Integer chatHistoryId) {
         // Set up headers
@@ -49,7 +52,7 @@ public class MessageController {
 
         // Create request body
         JSONObject requestBody = new JSONObject();
-        requestBody.put("model", "gpt-3.5-turbo"); // Adjust the model as needed
+        requestBody.put("model", "gpt-3.5-turbo");
         JSONArray messages = new JSONArray();
         messages.put(new JSONObject().put("role", "user").put("content", userInput));
         requestBody.put("messages", messages);
@@ -70,47 +73,37 @@ public class MessageController {
 
         // Save to database
         Message message = new Message();
-        message.setChatHistory(chatHistory); // Set the chatHistory
+        message.setChatHistory(chatHistory);
         message.setInput(userInput);
         message.setOutput(chatGptResponse);
         messageRepository.save(message);
 
-        // Return a simple acknowledgment (optional)
+        // Return a simple acknowledgment
         return ResponseEntity.ok("Response saved");
     }
-    // Clears the database (temporary method)
-    @PostMapping("/clearDatabase")
-    public ResponseEntity<?> clearDatabase() {
-        try {
-            // Implement the logic to clear the database
-            // For example, if using a JPA repository:
-            messageRepository.deleteAll();
 
-            return ResponseEntity.ok().body("Database cleared successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error clearing the database");
-        }
-    }
-
+    // Endpoint to save a chat history
     @PostMapping("/chatHistories")
     public ResponseEntity<Chathistory> saveChatHistory(@RequestBody Chathistory chatHistory) {
         Chathistory savedChatHistory = chatHistoryRepository.save(chatHistory);
         return ResponseEntity.ok(savedChatHistory);
     }
 
+    // Endpoint to get all chat histories
     @GetMapping("/chatHistories")
     public ResponseEntity<List<Chathistory>> getAllChatHistories() {
         List<Chathistory> chatHistories = chatHistoryRepository.findAll();
         return ResponseEntity.ok(chatHistories);
     }
 
+    // Endpoint to get the maximum chatHistoryId
     @GetMapping("/maxChatHistoryId")
     public ResponseEntity<Long> getMaxChatHistoryId() {
         Long maxChatHistoryId = chatHistoryRepository.findMaxChatHistoryId();
-        //System.out.println(maxChatHistoryId);
         return ResponseEntity.ok(maxChatHistoryId);
     }
 
+    // Endpoint to create a new chat history
     @PostMapping("/newChatHistory")
     public ResponseEntity<Chathistory> createNewChatHistory(@RequestParam String firstMessage) {
         // Split the first message into words
@@ -131,7 +124,7 @@ public class MessageController {
         // Create a new Chathistory object with the new chatHistoryId
         Chathistory newChatHistory = new Chathistory();
         newChatHistory.setChatHistoryId(newChatHistoryId);
-        newChatHistory.setHeadline(headline); // Use the headline as the headline for the new chat history
+        newChatHistory.setHeadline(headline);
         newChatHistory.setTimeStamp(LocalDateTime.now());
 
         // Save the new Chathistory object to the chatHistoryRepository
@@ -141,12 +134,11 @@ public class MessageController {
         return ResponseEntity.ok(newChatHistory);
     }
 
+    // Endpoint to delete all data
     @DeleteMapping("/deleteAll")
     public ResponseEntity<Void> deleteAll() {
         messageRepository.deleteAll();
         chatHistoryRepository.deleteAll();
         return ResponseEntity.noContent().build();
     }
-
-
 }
