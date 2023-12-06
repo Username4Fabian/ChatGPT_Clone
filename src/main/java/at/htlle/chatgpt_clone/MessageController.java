@@ -24,6 +24,10 @@ public class MessageController {
 
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
 
+    // OpenAI API key
+    @Value("${openai.api.key}")
+    private String openaiApiKey;
+
     // Endpoint to save a message
     @PostMapping("/messages")
     public ResponseEntity<Message> saveMessage(@RequestBody Message message) {
@@ -38,13 +42,10 @@ public class MessageController {
         return ResponseEntity.ok(messages);
     }
 
-    // OpenAI API key
-    @Value("${openai.api.key}")
-    private String openaiApiKey;
-
     // Endpoint to get a response from ChatGPT and save it
     @PostMapping("/chatgpt")
     public ResponseEntity<String> getChatGptResponse(@RequestParam String userInput, @RequestParam Integer chatHistoryId) {
+
         // Set up headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

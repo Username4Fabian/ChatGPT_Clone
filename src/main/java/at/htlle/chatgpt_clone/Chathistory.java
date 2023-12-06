@@ -17,11 +17,11 @@ public class Chathistory {
     private String headline;
 
     /*
-    *JPA, which is a specification for object-relational mapping in Java,
-    * needs to be able to create an empty instance of the entity class before it
-    * starts to populate the retrieved data into the fields.
-    * This is done via the default constructor.
-    */
+     *JPA, which is a specification for object-relational mapping in Java,
+     * needs to be able to create an empty instance of the entity class before it
+     * starts to populate the retrieved data into the fields.
+     * This is done via the default constructor.
+     */
 
     // Default constructor
     public Chathistory() {

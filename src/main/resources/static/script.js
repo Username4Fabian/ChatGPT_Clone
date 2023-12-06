@@ -15,10 +15,10 @@ displayHistory();
 
 // Function to start a new chat
 async function startNewChat(firstMessage) {
-    clearChatContainer();
+    clearChatContainer(); // Clear chat container to not display messages from previous chat
     const response = await fetch('/newChatHistory', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}, // // Sets the 'Content-Type' header for the HTTP request to 'application/x-www-form-urlencoded'
         body: `firstMessage=${encodeURIComponent(firstMessage)}`
     });
 
@@ -31,23 +31,23 @@ async function startNewChat(firstMessage) {
 async function getMessage() {
     const userMessage = inPutElement.value;
     const chatContainer = document.getElementById('chat-container');
-
     const userMessageDiv = document.createElement('div');
-    userMessageDiv.classList.add('message', 'user-message');
+
+    userMessageDiv.classList.add('message', 'user-message'); // Add classes to userMessageDiv
     userMessageDiv.textContent = userMessage;
     chatContainer.appendChild(userMessageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
     inPutElement.value = "";
 
-    if (isFirstMessage) {
+    if (isFirstMessage) { // Check if it is the first message & wait for the new chat history to be created
         chatHistoryId = await startNewChat(userMessage);
         isFirstMessage = false;
     }
 
     try {
-        await fetch('/chatgpt', {
+        await fetch('/chatgpt', { // Fetch request to send message to ChatGPT
             method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             body: `userInput=${encodeURIComponent(userMessage)}&chatHistoryId=${chatHistoryId}`
         });
 
@@ -59,14 +59,14 @@ async function getMessage() {
 
 // Function to load chat history from the database and display it
 function loadChatHistory(chatHistoryId) {
-    clearChatContainer();
+    clearChatContainer(); // Clear chat container to not display messages double
     fetch(`/messages?chatHistoryId=${chatHistoryId}`)
         .then(response => response.json())
         .then(messages => {
             const chatContainer = document.getElementById('chat-container');
             if (Array.isArray(messages)) {
                 messages.forEach(message => {
-                    if (message.input) {
+                    if (message.input) { // Check if message is an input or output
                         const userInputDiv = document.createElement('div');
                         userInputDiv.classList.add('message', 'user-message');
                         userInputDiv.textContent = message.input;
@@ -81,7 +81,6 @@ function loadChatHistory(chatHistoryId) {
                     }
                 });
             }
-
             chatContainer.scrollTop = chatContainer.scrollHeight;
         })
         .catch(error => console.error('Error loading chat history:', error));
@@ -104,16 +103,16 @@ function clearInput() {
 
 // Function to clear the chat container
 function clearChatContainer() {
-    const chatContainer = document.getElementById('chat-container');
+    const chatContainer = document.getElementById('chat-container'); // Get chat container
     chatContainer.innerText = "";
 }
 
 // Function to display chat histories
 function displayHistory() {
-    fetch('/chatHistories')
+    fetch('/chatHistories') // Fetch request to get chat histories
         .then(response => response.json())
         .then(chatHistories => {
-            const historyList = document.getElementById('history-list');
+            const historyList = document.getElementById('history-list'); // Get history list
             historyList.innerHTML = '';
 
             chatHistories.forEach(chatHistory => {
@@ -125,7 +124,7 @@ function displayHistory() {
                     loadChatHistory(chatHistoryId);
                 });
 
-                historyList.appendChild(chatHistoryDiv);
+                historyList.appendChild(chatHistoryDiv); // Add chat history to history list
             });
         })
         .catch(error => console.error('Error loading chat histories:', error));
@@ -134,7 +133,7 @@ function displayHistory() {
 // Event listeners for the new chat button
 document.querySelector('#newChatButton').addEventListener('click', async () => {
     const firstMessage = inPutElement.value;
-    const chatContainer = document.getElementById('chat-container');
+    const chatContainer = document.getElementById('chat-container'); // Get chat container
 
     if (firstMessage.trim() !== '') { // Check if firstMessage is not empty
         chatHistoryId = await startNewChat(firstMessage);
@@ -151,16 +150,15 @@ document.querySelector('#newChatButton').addEventListener('click', async () => {
 
 // Event listeners for the delete button
 document.querySelector('#deleteAllButton').addEventListener('click', () => {
-    fetch('/deleteAll', { method: 'DELETE' })
+    fetch('/deleteAll', {method: 'DELETE'}) // Fetch request to delete all chat histories
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             isFirstMessage = true;
             clearChatContainer();
-            loadChatHistory(chatHistoryId);
+            loadChatHistory(chatHistoryId); // Reload chat history & display chat histories
             displayHistory();
-            // Optionally, you can refresh the page or update the UI to reflect the deletion
         })
         .catch(error => console.error('Error:', error));
 });

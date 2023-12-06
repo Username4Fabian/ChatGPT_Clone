@@ -16,8 +16,9 @@ public class Message {
     private String input;
     private String output;
 
-    // Default constructor and constructor with parameters
-    public Message() {}
+    // Default constructor and constructor with parameters (See ChatHistory.java for more information)
+    public Message() {
+    }
 
     // Constructor with parameters
     public Message(Chathistory chatHistory, String input, String output) {
