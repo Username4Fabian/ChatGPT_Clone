@@ -36,4 +36,4 @@ build/
 application.properties
 
 .DS_Store
--/DS_Store
+./DS_Store
