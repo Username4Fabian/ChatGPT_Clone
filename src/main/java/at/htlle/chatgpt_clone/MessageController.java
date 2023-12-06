@@ -14,6 +14,8 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
+// curl-Test: curl -X POST -H "Content-Type: application/json" -d '{"output":"Hello World", "input":"Hi", "chat_history_id":1}' http://localhost:8080/messages
+
 @RestController
 public class MessageController {
 
