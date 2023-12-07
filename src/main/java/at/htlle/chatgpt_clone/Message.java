@@ -9,7 +9,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // The primary key value is auto-generated
     private Long id;
 
-    @ManyToOne  // Many-to-one relationship with the Chathistory entity
+    @ManyToOne  // Many-to-one relationship with the Chat-history entity
     @JoinColumn(name = "chat_history_id")  // Foreign key column in the Message table
     private Chathistory chatHistory;
 

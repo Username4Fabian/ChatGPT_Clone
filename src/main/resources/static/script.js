@@ -132,6 +132,7 @@ function displayHistory() {
 
 // Event listeners for the new chat button
 document.querySelector('#newChatButton').addEventListener('click', async () => {
+    clearInput();
     const firstMessage = inPutElement.value;
     const chatContainer = document.getElementById('chat-container'); // Get chat container
 

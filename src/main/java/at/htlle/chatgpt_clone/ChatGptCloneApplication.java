@@ -16,5 +16,4 @@ public class ChatGptCloneApplication {
         // Indicating that the server is running
         System.out.println("Server is running at http://localhost:8080/");
     }
-
 }
